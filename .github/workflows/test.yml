@@ -27,6 +27,5 @@ jobs:
       
       - name: Build
         run: |
-          
           RELEASE_VERSION=${{ steps.get_latest_release_tag.outputs.tag_name }}"
-          echo $RELEASE_VERSION
+          echo "$RELEASE_VERSION"
