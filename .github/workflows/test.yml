@@ -17,17 +17,5 @@ jobs:
 
       - name: Build
         run: |
-          sudo bash build.sh \
-            --version=${{ inputs.version }}
-
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
-          append_body: false
-          fail_on_unmatched_files: true
-          name: "Version ${{ inputs.version }}"
-          tag_name: "${{ inputs.version }}"
-          files: |
-            linux-${{ inputs.version }}-kernel/debs/*
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
