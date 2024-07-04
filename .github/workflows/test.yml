@@ -16,4 +16,4 @@ jobs:
 
       - name: Build
         run: |
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}"
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/main/*/}"
