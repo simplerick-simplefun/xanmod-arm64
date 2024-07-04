@@ -13,7 +13,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        
+      - name: Get latest release tag
+        id: get_latest_release_tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const latestRelease = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            core.setOutput("tag_name", latestRelease.data.tag_name);
+      
       - name: Build
         run: |
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/main/*/}"
+          
+          RELEASE_VERSION=${{ steps.get_latest_release_tag.outputs.tag_name }}"
+          echo $RELEASE_VERSION
