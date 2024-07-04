@@ -5,8 +5,8 @@ LASTBUILDVER=$1
 XANMODVER=$2
 XANMODVER="${XANMODVER%%-*}"
 
-if [[ "$LASTBUILDVER" == "$XANMODVER" ]]; then
-    echo "Current xanmod release version $$XANMODVER is same as version of last build. No need to build. Exit."
+if [[ "${LASTBUILDVER}" == "${XANMODVER}" ]]; then
+    echo "Current xanmod release version ${XANMODVER} is same as version of last build. No need to build. Exit."
     exit 1
 fi
 
