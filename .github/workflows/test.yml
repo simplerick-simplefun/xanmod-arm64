@@ -48,7 +48,7 @@ jobs:
       
       - name: Build
         run: |
-          sudo bash build.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG"
+          sudo bash testbuild.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG"
 
       - name: Release
         uses: softprops/action-gh-release@v2
