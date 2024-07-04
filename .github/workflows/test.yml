@@ -1,17 +1,33 @@
 name: test
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release"
+        required: true
+
 jobs:
-  test:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Test
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
+          sudo bash build.sh \
+            --version=${{ inputs.version }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          append_body: false
+          fail_on_unmatched_files: true
+          name: "Version ${{ inputs.version }}"
+          tag_name: "${{ inputs.version }}"
+          files: |
+            linux-${{ inputs.version }}-kernel/debs/*
