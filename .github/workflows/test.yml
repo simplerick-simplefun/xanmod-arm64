@@ -47,10 +47,16 @@ jobs:
           echo "XANMOD latest release tag is $XANMOD_LATEST_TAG"
       
       - name: Build
+        id: build_kernel
         run: |
-          sudo bash testbuild.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG"
-
+          sudo exit_code=$(bash testbuild.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG")
+          if [ "$exit_code" -ne 0 ]; then
+            echo "script.sh did not complete with exit code $exit_code"
+            exit 1
+          fi
+      
       - name: Release
+        if: ${{ steps.build_kernel.outcome == 'success' }}
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
