@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get latest release tag
+      - name: Get last release tag of this repo
         id: get_latest_release_tag
         uses: actions/github-script@v6
         with:
@@ -26,7 +26,7 @@ jobs:
             });
             core.setOutput("tag_name", latestRelease.data.tag_name);
       
-      - name: Get latest release tag from another repository
+      - name: Get last release tag of "xanmod/linux"
         id: get_latest_release_tag_xanmod
         uses: actions/github-script@v6
         with:
@@ -39,7 +39,7 @@ jobs:
             });
             core.setOutput("tag_name", latestRelease.data.tag_name);
       
-      - name: Assign latest release tag to variable and echo
+      - name: Assign tags to variable
         run: |
           MY_LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
           XANMOD_LATEST_TAG=${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}
