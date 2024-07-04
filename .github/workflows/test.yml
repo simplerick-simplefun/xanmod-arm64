@@ -2,18 +2,19 @@ name: test
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
+ 
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Release
+  get-latest-release-tag:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Get latest release tag
         id: get_latest_release_tag
         uses: actions/github-script@v6
@@ -24,8 +25,8 @@ jobs:
               repo: context.repo.repo,
             });
             core.setOutput("tag_name", latestRelease.data.tag_name);
-      
-      - name: Build
+
+      - name: Assign latest release tag to variable and echo
         run: |
-          RELEASE_VERSION=${{ steps.get_latest_release_tag.outputs.tag_name }}"
-          echo "$RELEASE_VERSION"
+          LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
+          echo "The latest release tag is $LATEST_TAG"
