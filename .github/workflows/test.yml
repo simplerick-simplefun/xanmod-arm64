@@ -25,8 +25,23 @@ jobs:
               repo: context.repo.repo,
             });
             core.setOutput("tag_name", latestRelease.data.tag_name);
-
+      
+      - name: Get latest release tag from another repository
+        id: get_latest_release_tag_xanmod
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = 'xanmod';  // Replace 'target-owner' with the actual owner of the repository
+            const repo = 'linux';    // Replace 'target-repo' with the actual repository name
+            const latestRelease = await github.rest.repos.getLatestRelease({
+              owner: owner,
+              repo: repo,
+            });
+            core.setOutput("tag_name", latestRelease.data.tag_name);
+      
       - name: Assign latest release tag to variable and echo
         run: |
-          LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
-          echo "The latest release tag is $LATEST_TAG"
+          MY_LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
+          XANMOD_LATEST_TAG=${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}
+          echo "My latest release tag is $MY_LATEST_TAG"
+          echo "XANMOD latest release tag is $XANMOD_LATEST_TAG"
