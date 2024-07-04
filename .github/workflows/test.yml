@@ -48,10 +48,10 @@ jobs:
       
       - name: Build
         id: build_kernel
+        continue-on-error: true
         run: |
-          exit_code=$(sudo bash testbuild.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG")
-          echo "$exit_code"
-          if [ "$exit_code" -ne 0 ]; then
+          sudo bash testbuild.sh "$MY_LATEST_TAG"  "$XANMOD_LATEST_TAG"
+          if [ "$?" -ne 0 ]; then
             echo "script.sh did not complete with exit code $exit_code"
             exit 0
           fi
