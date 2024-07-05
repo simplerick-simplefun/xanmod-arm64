@@ -40,19 +40,18 @@ jobs:
         run: |
           MY_LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
           XANMOD_LATEST_TAG=${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}
+          XANMOD_LATEST_TAG="${XANMOD_LATEST_TAG%%-*}"
           echo "My latest release tag is $MY_LATEST_TAG"
           echo "XANMOD latest release tag is $XANMOD_LATEST_TAG"
       
       - name: Build
         id: build_kernel
-        continue-on-error: true
         run: |
-          sudo bash auto-build.sh "$MY_LATEST_TAG" "$XANMOD_LATEST_TAG"
-          exit_code=$?
-          if [ "$exit_code" -ne 0 ]; then
-            echo "script.sh did not complete with exit code $exit_code"
+          if [[ "${MY_LATEST_TAG}" == "${XANMOD_LATEST_TAG}" ]]; then
+            echo "Current xanmod release version ${MY_LATEST_TAG} is same as version of last build. No need to build. Exit."
             exit 0
           fi
+          sudo bash auto-build.sh "$XANMOD_LATEST_TAG"
       
       - name: Release
         if: ${{ steps.build_kernel.outcome == 'success' }}
