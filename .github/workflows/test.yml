@@ -1,4 +1,4 @@
-name: auto-release
+name: test-auto-release
 
 on:
   workflow_dispatch:
