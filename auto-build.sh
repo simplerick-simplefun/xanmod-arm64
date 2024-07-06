@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-XANMODVER=$1
+XANMOD_LATEST_TAG=$1
+XANMODVER="${XANMOD_LATEST_TAG%%-*}"
 
 echo "xanmod version: ${XANMODVER}"
 
@@ -11,14 +12,14 @@ apt update &&
         libelf-dev:native build-essential lsb-release \
         bc debhelper rsync kmod cpio
 
-rm -rf linux-${XANMODVER}-xanmod1.tar.gz
-wget https://gitlab.com/xanmod/linux/-/archive/${XANMODVER}-xanmod1/linux-${XANMODVER}-xanmod1.tar.gz
-mkdir -p linux-${XANMODVER}-kernel
-rm -rf linux-${XANMODVER}-kernel/*
-tar -zxf "linux-${XANMODVER}-xanmod1.tar.gz" \
-    -C linux-${XANMODVER}-kernel \
+rm -rf linux-${XANMOD_LATEST_TAG}.tar.gz
+wget https://gitlab.com/xanmod/linux/-/archive/${XANMOD_LATEST_TAG}/linux-${XANMOD_LATEST_TAG}.tar.gz
+mkdir -p linux-${XANMOD_LATEST_TAG}-kernel
+rm -rf linux-${XANMOD_LATEST_TAG}-kernel/*
+tar -zxf "linux-${XANMOD_LATEST_TAG}.tar.gz" \
+    -C linux-${XANMOD_LATEST_TAG}-kernel \
     --strip-components=1
-cd linux-${XANMODVER}-kernel
+cd linux-${XANMOD_LATEST_TAG}-kernel
 
 cp ../configs/config-6.6.13+bpo-arm64 .config
 
@@ -32,6 +33,7 @@ scripts/config --set-str CONFIG_SYSTEM_TRUSTED_KEYS ''
 scripts/config --set-str CONFIG_SYSTEM_REVOCATION_KEYS ''
 
 scripts/config --disable CONFIG_DEBUG_INFO_BTF # then no need dwarves
+scripts/config --disable CONFIG_DEBUG_INFO_DWARF5
 
 # LTO
 scripts/config --enable CONFIG_LTO_CLANG_THIN

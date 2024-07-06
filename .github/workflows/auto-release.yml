@@ -41,7 +41,6 @@ jobs:
         run: |
           MY_LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
           XANMOD_LATEST_TAG=${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}
-          XANMOD_LATEST_TAG="${XANMOD_LATEST_TAG%%-*}"
           echo "My latest release tag is $MY_LATEST_TAG"
           echo "XANMOD latest release tag is $XANMOD_LATEST_TAG"
           if [[ "${MY_LATEST_TAG}" == "${XANMOD_LATEST_TAG}" ]]; then
