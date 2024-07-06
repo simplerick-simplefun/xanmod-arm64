@@ -1,8 +1,7 @@
 name: auto-release
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Runs at midnight (00:00) UTC every day
+  workflow_dispatch:
 
 jobs:
   check_and_build_new_xanmod_release:
