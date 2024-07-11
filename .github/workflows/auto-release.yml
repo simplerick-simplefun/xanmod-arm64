@@ -16,39 +16,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get last release tag of this repo
-        id: get_latest_release_tag
+      - name: Get last release tags
+        id: get_latest_release_tags
         uses: actions/github-script@v7
         with:
           script: |
-            const latestRelease = await github.rest.repos.getLatestRelease({
+            const myLatestRelease = await github.rest.repos.getLatestRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
-            core.setOutput("tag_name", latestRelease.data.tag_name);
-      
-      - name: Get last release tag of "xanmod/linux"
-        id: get_latest_release_tag_xanmod
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const owner = 'xanmod';  // Replace 'target-owner' with the actual owner of the repository
-            const repo = 'linux';    // Replace 'target-repo' with the actual repository name
-            const latestRelease = await github.rest.repos.getLatestRelease({
-              owner: owner,
-              repo: repo,
+            core.setOutput("my_latest_tag", myLatestRelease.data.tag_name);
+            
+            const xmLatestRelease = await github.rest.repos.getLatestRelease({
+              owner: 'xanmod',
+              repo: 'linux',
             });
-            core.setOutput("tag_name", latestRelease.data.tag_name);
+            core.setOutput("xanmod_latest_tag", xmLatestRelease.data.tag_name);
       
       - name: Build
         id: build_kernel
         run: |
-          MY_LATEST_TAG=${{ steps.get_latest_release_tag.outputs.tag_name }}
-          XANMOD_LATEST_TAG=${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}
-          echo "My latest release tag is $MY_LATEST_TAG"
-          echo "XANMOD latest release tag is $XANMOD_LATEST_TAG"
+          MY_LATEST_TAG=${{ steps.get_latest_release_tags.outputs.my_latest_tag }}
+          XANMOD_LATEST_TAG=${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}
+          
           if [[ "${MY_LATEST_TAG}" == "${XANMOD_LATEST_TAG}" ]]; then
-            echo "Current xanmod release version ${MY_LATEST_TAG} is same as version of last build. No need to build. Exit."
+            echo "Current xanmod release version ${MY_LATEST_TAG} is same as version of last my build ${MY_LATEST_TAG}. No need to build."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             sudo bash auto-build.sh "$XANMOD_LATEST_TAG"
