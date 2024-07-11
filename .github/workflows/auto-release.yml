@@ -54,7 +54,7 @@ jobs:
           draft: false
           append_body: false
           fail_on_unmatched_files: true
-          name: "Version ${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}"
-          tag_name: "${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}"
+          name: "Version ${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}"
+          tag_name: "${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}"
           files: |
-            linux-${{ steps.get_latest_release_tag_xanmod.outputs.tag_name }}-kernel/debs/*
+            linux-${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}-kernel/debs/*
