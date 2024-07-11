@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'  # Runs at midnight (00:00) UTC every day
+  push:
+    branches:
+      - main
 
 jobs:
   check_and_build_new_xanmod_release:
