@@ -51,7 +51,7 @@ jobs:
       
       - name: Release
         if: ${{ steps.build_kernel.outcome == 'success' }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.0.6 
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
