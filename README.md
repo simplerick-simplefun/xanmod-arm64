@@ -14,6 +14,8 @@ Installation script (Debian):
 #!/usr/bin/bash
 
 sudo apt install jq -y
+
+sudo rm -rf ./tempxmod
 mkdir ./tempxmod
 cd ./tempxmod
 
