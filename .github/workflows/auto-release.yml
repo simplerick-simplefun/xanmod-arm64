@@ -26,25 +26,35 @@ jobs:
               repo: context.repo.repo,
             });
             core.setOutput("my_latest_tag", myLatestRelease.data.tag_name);
-            
-            const xmLatestRelease = await github.rest.repos.getLatestRelease({
-              owner: 'xanmod',
-              repo: 'linux',
-            });
-            core.setOutput("xanmod_latest_tag", xmLatestRelease.data.tag_name);
       
       - name: Build
         id: build_kernel
         run: |
           MY_LATEST_TAG=${{ steps.get_latest_release_tags.outputs.my_latest_tag }}
-          XANMOD_LATEST_TAG=${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}
           
-          if [[ "${MY_LATEST_TAG}" == "${XANMOD_LATEST_TAG}" ]]; then
-            echo "Current xanmod release version ${MY_LATEST_TAG} is same as version of last my build ${MY_LATEST_TAG}. No need to build."
+          sudo apt install jq
+          XANMOD_LATEST_TAG=$(curl -s https://gitlab.com/api/v4/projects/51590166/releases/ | jq '.[]' | jq -r '.name' | head -1)
+          
+          if [[ ${XANMOD_LATEST_TAG} == *"-rt-xanmod1" ]]; then
+            echo "Skipping rt version ${XANMOD_LATEST_TAG}. No need to build."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
-            sudo bash auto-build.sh "$XANMOD_LATEST_TAG"
+            myversion="$(echo "${MY_LATEST_TAG}" | cut -d. -f1)"
+            newversion="$(echo "${XANMOD_LATEST_TAG}" | cut -d. -f1)"
+            
+            if [ "${myversion}" -eq "${newversion}" ]; then
+              myversion="$(echo "${MY_LATEST_TAG}" | cut -d. -f2)"
+              newversion="$(echo "${XANMOD_LATEST_TAG}" | cut -d. -f2)"
+            fi
+            
+            if [ "${myversion}" -ge "${newversion}" ]; then
+              echo "Current xanmod release version: ${MY_LATEST_TAG}; my latest build: ${MY_LATEST_TAG}. No need to build."
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            else
+              sudo bash auto-build.sh "$XANMOD_LATEST_TAG"
+            fi
           fi
+          
       
       - name: Release
         if: ${{ (steps.build_kernel.outcome == 'success') && (steps.build_kernel.outputs.skip != 'true') }}
