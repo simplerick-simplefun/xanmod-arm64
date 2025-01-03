@@ -108,6 +108,8 @@ scripts/config --set-str "DEFAULT_TCP_CONG" "bbr"
 
 disable "VIRTIO_BALLOON"
 
+export CROSS_COMPILE="aarch64-linux-gnu-"
+export CC="aarch64-linux-gnu-gcc"
 
 MAKE="make -j$(nproc) ARCH=arm64 INSTALL_MOD_STRIP=1 KCFLAGS=\"-pipe\""
 
