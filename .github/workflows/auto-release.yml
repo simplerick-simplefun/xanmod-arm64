@@ -105,6 +105,7 @@ jobs:
           
           sudo apt install jq
           XANMOD_LATEST_TAG=$(curl -s https://gitlab.com/api/v4/projects/51590166/releases/ | jq '.[]' | jq -r '.name' | head -1)
+          echo "xanmod_build_tag=${XANMOD_LATEST_TAG}" >> "$GITHUB_OUTPUT"
           
           if [[ ${XANMOD_LATEST_TAG} == *"-rt-xanmod1" ]]; then
             echo "Skipping rt version ${XANMOD_LATEST_TAG}. No need to build."
@@ -135,7 +136,7 @@ jobs:
           draft: false
           append_body: false
           fail_on_unmatched_files: true
-          name: "Version ${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}"
-          tag_name: "${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}"
+          name: "Version ${{ steps.build_kernel.outputs.xanmod_build_tag }}"
+          tag_name: "${{ steps.build_kernel.outputs.xanmod_build_tag }}"
           files: |
-            linux-${{ steps.get_latest_release_tags.outputs.xanmod_latest_tag }}-kernel/debs/*
+            linux-${{ steps.build_kernel.outputs.xanmod_build_tag }}-kernel/debs/*
