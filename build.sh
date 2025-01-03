@@ -42,7 +42,7 @@ tar -zxf "linux-${XANMODVER}-xanmod1.tar.gz" \
     --strip-components=1
 cd linux-${XANMODVER}-kernel
 
-cp ../configs/config-6.6.13+bpo-arm64 .config
+cp ../configs/config-6.9.7+bpo-arm64 .config
 
 scripts/config --set-str CONFIG_LOCALVERSION '-arm64'
 
@@ -66,9 +66,10 @@ scripts/config --disable CONFIG_MODULE_SIG_SHA256
 scripts/config --disable CONFIG_MODULE_SIG_SHA384
 scripts/config --disable CONFIG_MODULE_SIG_SHA512
 
-MAKE="make -j$(nproc) ARCH=arm64 LLVM=1 LLVM_IAS=1"
+MAKE="make -j$(nproc) ARCH=arm64 INSTALL_MOD_STRIP=1 KCFLAGS=\"-pipe\""
 
 $MAKE olddefconfig
+$MAKE prepare
 
 $MAKE
 echo "build done"
