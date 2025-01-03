@@ -32,9 +32,10 @@ echo "xanmod version: ${XANMODVER}"
 
 apt update &&
     apt install -y wget make clang llvm lld \
-        flex bison libncurses-dev perl libssl-dev:native \
-        libelf-dev:native build-essential lsb-release \
-        bc debhelper rsync kmod cpio
+        flex bison libncurses-dev perl libssl-dev:arm64 libelf-dev:arm64 \
+        libssl-dev:native libelf-dev:native build-essential lsb-release \
+        bc debhelper debhelper-compat rsync kmod cpio \
+        gcc-aarch64-linux-gnu 
 
 rm -rf linux-${XANMOD_LATEST_TAG}.tar.gz
 wget https://gitlab.com/xanmod/linux/-/archive/${XANMOD_LATEST_TAG}/linux-${XANMOD_LATEST_TAG}.tar.gz
