@@ -30,6 +30,8 @@ XANMODVER="${XANMOD_LATEST_TAG%%-*}"
 
 echo "xanmod version: ${XANMODVER}"
 
+dpkg --add-architecture arm64
+
 apt update &&
     apt install -y wget make clang llvm lld \
         flex bison libncurses-dev perl libssl-dev:arm64 libelf-dev:arm64 \
