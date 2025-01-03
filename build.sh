@@ -30,7 +30,8 @@ apt update &&
     apt install -y wget make clang llvm lld \
         flex bison libncurses-dev perl libssl-dev:native \
         libelf-dev:native build-essential lsb-release \
-        bc debhelper rsync kmod cpio
+        bc debhelper rsync kmod cpio \
+        gcc-aarch64-linux-gnu libssl-dev
 
 rm -rf linux-${XANMODVER}-xanmod1.tar.gz
 wget https://gitlab.com/xanmod/linux/-/archive/${XANMODVER}-xanmod1/linux-${XANMODVER}-xanmod1.tar.gz
