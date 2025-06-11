@@ -2,8 +2,8 @@ name: auto-release
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'  # Runs at midnight (00:00) UTC every day
+  # schedule:
+  #   - cron: '0 0 * * *'  # Runs at midnight (00:00) UTC every day
   push:
     branches:
       - main
